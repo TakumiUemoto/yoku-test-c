@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import './App.css';
+import styled from "styled-components";
 
 function App() {
+
+  const [selected, setSelected] = useState({id:null, name: ""});
+  const [disabled1, setDisabled1] = useState(true);
+  const [disabled2, setDisabled2] = useState(true);
+  const [active, setActive] = useState(false);
+
   const [lists1, setLists1] = useState([
     {id: 1, name: "Apple"},
     {id: 2, name: "Watermelon"},
@@ -15,63 +21,116 @@ function App() {
     {id: 8, name: "Plum"},
   ]);
 
-  const [selected, setSelected] = useState(null);
-  const [disabled1, setDisabled1] = useState(false);
-  const [disabled2, setDisabled2] = useState(false);
 
   const handleClick1 = (i) => {
     setSelected(i); //リスト選択状態のセット
-    setDisabled1(true); //「左へ移動」を無効に
+      setActive(!active); //選択した文字の色を切り替える
+      setDisabled2(false); 
   };
 
   const handleClick2 = (i) => {
     setSelected(i); //リスト選択状態のセット
-    setDisabled2(true); //「右へ移動」を無効に
+      setActive(!active); //選択した文字の色を切り替える
+      setDisabled1(false); 
   };
+
 
   const moveToRight = () => {
     setLists1(lists1.filter((i) => i.id !== selected.id));
     setLists2([...lists2, selected]);
 
-    setSelected(null); //リストの選択状態を解除
-    setDisabled1(false); //「左へ移動」の無効を解除
+      setSelected({id:null, name: ""}); //リストの選択状態を解除
+      setActive(!active); //選択した文字の色を切り替える
+      setDisabled2(true); 
   };
 
   const moveToLeft = () => {
     setLists2(lists2.filter((i) => i.id !== selected.id));
     setLists1([...lists1, selected]);
 
-    setSelected(null); //リストの選択状態を解除
-    setDisabled2(false); //「右へ移動」の無効を解除
+      setSelected({id:null, name: ""}); //リストの選択状態を解除
+      setActive(!active); //選択した文字の色を切り替える
+      setDisabled1(true); 
   };
 
   return (
-    <div>
-      <div className='ul-wrapper'>
-        <ul>
-    {/* 同じリストへ移動できないように左右のリストを同時選択不可に*/}
+    <Container>
+
+      <ListContainer>
+        <List>
           {lists1.map((i) => (
-            <li key={i.id} onClick={() => handleClick1(i)} disabled={disabled2}>
-              {i.name}
-            </li>
+            <ListItem key={i.id} onClick={() => handleClick1(i)} active={active} disabled={disabled2}>
+              { i.name  }
+            </ListItem>
           ))}
-        </ul>
-        <ul>
+        </List>
+        <List>
           {lists2.map((i) => (
-            <li key={i.id} onClick={() => handleClick2(i)} disabled={disabled1}>
-              {i.name}
-            </li>
+            <ListItem key={i.id} onClick={() => handleClick2(i)} active={active} disabled={disabled1}>
+              { i.name  }
+            </ListItem>
           ))}
-        </ul>
-      </div>
-      <div className='button-wrapper'>
-          <button className="button" onClick={moveToRight} 
-                  disabled={disabled2}>右へ移動</button>
-          <button className="button" onClick={moveToLeft} 
-                  disabled={disabled1}>左へ移動</button>
-      </div>
-    </div>
-  )
-}
+        </List>
+      </ListContainer>
+
+      <ButtonContainer>
+        <Button className="button" onClick={moveToRight} 
+                disabled={disabled2}>右へ移動</Button>
+        <Button className="button" onClick={moveToLeft} 
+                disabled={disabled1}>左へ移動</Button>
+      </ButtonContainer>
+
+      <StyledSelect 
+        active={active}>{`選択中: ${selected.name}`}
+      </StyledSelect>
+    </Container>
+  );
+};
+
+const Container = styled.div`
+  width: 800px;
+`;
+const ListContainer = styled.div`
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const List = styled.ul`
+  list-style: none;
+  padding-right: 40px;
+  box-sizing: border-box;
+  border: 1px solid darkblue;
+  width: 350px;
+  height: 460px;
+
+`
+
+const ListItem = styled.li`
+  text-align: center;
+  padding: 15px 0;
+  box-sizing: border-box;
+  border-bottom: 1px solid darkblue; 
+
+`;
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Button = styled.button` 
+  text-align: center;
+  padding: 5px 40px;
+  margin: 20px 110px;
+  background-color: darkblue;
+  color: white;
+`;
+
+const StyledSelect = styled.h1`
+  color: ${props => (props.active ? "black" : "white" )};
+  text-align: center;
+`;
 
 export default App;

@@ -5,18 +5,18 @@ import styled from "styled-components";
 function App() {
 
   const [selected, setSelected] = useState({id:null, name: ""});
-  const [disabled1, setDisabled1] = useState(true);
-  const [disabled2, setDisabled2] = useState(true);
+  const [disabled_L, setDisabled_L] = useState(true);
+  const [disabled_R, setDisabled_R] = useState(true);
   const [active, setActive] = useState(false);
 
 //初期のリスト
-  const [lists1, setLists1] = useState([
+  const [leftList, setLeftList] = useState([
     {id: 1, name: "Apple"},
     {id: 2, name: "Watermelon"},
     {id: 3, name: "Grape"},
     {id: 4, name: "Banana"},
   ]); 
-  const [lists2, setLists2] = useState([
+  const [rightList, setRightList] = useState([
     {id: 5, name: "Strawberry"},
     {id: 6, name: "Peach"},
     {id: 7, name: "Cherry"},
@@ -27,32 +27,32 @@ function App() {
   const handleClick1 = (i) => {
     setSelected(i); //リスト選択状態のセット
       setActive(!active); //選択状態表示
-      setDisabled2(false); 
+      setDisabled_R(false); 
   };
 
   const handleClick2 = (i) => {
     setSelected(i); 
       setActive(!active); 
-      setDisabled1(false); 
+      setDisabled_L(false); 
   };
 
 //リストの移動機能
   const moveToRight = () => {
-    setLists1(lists1.filter((i) => i.id !== selected.id));
-    setLists2([...lists2, selected]);
+    setLeftList(leftList.filter((i) => i.id !== selected.id));
+    setRightList([...rightList, selected]);
 
       setSelected({id:null, name: ""}); //リストの選択状態を解除
       setActive(!active); //選択状態非表示
-      setDisabled2(true); 
+      setDisabled_R(true); 
   };
 
   const moveToLeft = () => {
-    setLists2(lists2.filter((i) => i.id !== selected.id));
-    setLists1([...lists1, selected]);
+    setRightList(rightList.filter((i) => i.id !== selected.id));
+    setLeftList([...leftList, selected]);
 
       setSelected({id:null, name: ""}); 
       setActive(!active); 
-      setDisabled1(true); 
+      setDisabled_L(true); 
   };
 
 
@@ -61,18 +61,18 @@ function App() {
 
       <ListContainer>
         <List>
-          {lists1.map((i) => (
+          {leftList.map((i) => (
             <ListItem key={i.id} onClick={() => handleClick1(i)} 
-              active={active} disabled={disabled2}>
+              active={active} disabled={disabled_R}>
                 { i.name  }
             </ListItem>
           ))}
         </List>
 
         <List>
-          {lists2.map((i) => (
+          {rightList.map((i) => (
             <ListItem key={i.id} onClick={() => handleClick2(i)} 
-              active={active} disabled={disabled1}>
+              active={active} disabled={disabled_L}>
                 { i.name  }
             </ListItem>
           ))}
@@ -81,9 +81,9 @@ function App() {
 
       <ButtonContainer>
         <Button className="button" onClick={moveToRight} 
-                disabled={disabled2}>右へ移動</Button>
+                disabled={disabled_R}>右へ移動</Button>
         <Button className="button" onClick={moveToLeft} 
-                disabled={disabled1}>左へ移動</Button>
+                disabled={disabled_L}>左へ移動</Button>
       </ButtonContainer>
 
       <StyledSelect 
